@@ -20,7 +20,7 @@ jobs:
     - name: Build
       run: dotnet build -c Release --no-restore
     - name: Publish
-      run: dotnet publish -c Release -o /app
+      run: dotnet publish --no-build -c Release -o ${{env.DOTNET_ROOT}}
     - name: Upload artifact
       uses: actions/upload-artifact@v3.1.0
       with:
