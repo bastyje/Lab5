@@ -1,0 +1,44 @@
+name: .NET CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build -c Release --no-restore
+    - name: Publish
+      run: dotnet publish -c Release -o /app
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: lab5mwo
+        path: /app
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Dev'
+      url: https://lab5mwo.azurewebsites.net
+    steps:
+      - name: Download artifact
+        uses: actions/download-architect@3.0.0
+        with:
+          name: lab5mwo
+      - name: Upload to azure
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: 'lab5mwo'
+          publish-profile: ${{secrets.PUBLISH_PROFILE_DEV}}
