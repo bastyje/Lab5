@@ -56,5 +56,5 @@ jobs:
         - name: Upload to azure
           uses: Azure/webapps-deploy@v2
           with:
-            app-name: 'lab5mwo'
+            app-name: 'lab5mwo-prod'
             publish-profile: ${{secrets.PUBLISH_PROFILE_PROD}}
