@@ -42,3 +42,19 @@ jobs:
         with:
           app-name: 'lab5mwo'
           publish-profile: ${{secrets.PUBLISH_PROFILE_DEV}}
+  deploy-prod:
+      runs-on: ubuntu-latest
+      needs: build
+      environment:
+        name: 'Prod'
+        url: https://lab5mwo-prod.azurewebsites.net
+      steps:
+        - name: Download artifact
+          uses: actions/download-artifact@v3
+          with:
+            name: lab5mwo
+        - name: Upload to azure
+          uses: Azure/webapps-deploy@v2
+          with:
+            app-name: 'lab5mwo'
+            publish-profile: ${{secrets.PUBLISH_PROFILE_PROD}}
